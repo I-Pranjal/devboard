@@ -1,12 +1,7 @@
 import ProjectItem from './projectitem'
 
-const ProjectList = ({ projects, setProjects }) => {
-  const handleDelete = id => {
-    const confirmed = window.confirm('Delete this project?')
-    if (confirmed) {
-      setProjects(prev => prev.filter(project => project.id !== id))
-    }
-  }
+const ProjectList = ({ projects, deleteProject }) => {
+  
 
   const handleStatusChange = (id, newStatus) => {
     setProjects(prev =>
@@ -26,7 +21,7 @@ const ProjectList = ({ projects, setProjects }) => {
         <ProjectItem
           key={project.id}
           project={project}
-          onDelete={handleDelete}
+          onDelete={deleteProject}
           onStatusChange={handleStatusChange}
         />
       ))}

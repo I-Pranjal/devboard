@@ -1,85 +1,154 @@
-import { useState } from 'react';
+import React, { useState } from "react";
+import {
+  Input,
+  Textarea,
+  Button,
+  Dialog,
+  IconButton,
+  Typography,
+  DialogBody,
+  DialogHeader,
+  DialogFooter,
+} from "@material-tailwind/react";
+import { Plus , X ,SaveAll,} from "lucide-react";
 
-const SnippetForm = ({addSnippet}) => {
-    const initialform = {
-        title: '',
-        description: '',
-        language: '',
-        snippet: '',
-        id : Math.random().toString(36).substring(2, 15),
-        tags: ''
-    };
-    const [form, setForm] = useState(initialform);
+const SnippetForm = ({ addSnippet }) => {
+  const initialForm = {
+    title: "",
+    description: "",
+    language: "",
+    snippet: "",
+    tags: "",
+  };
 
-    const handleChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value,
-        });
-    };
+  const [form, setForm] = useState(initialForm);
+  const [open, setOpen] = useState(false);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        addSnippet(form);
-        setForm(initialform); // Reset form after submission
-    };
+  const handleOpen = () => setOpen(!open);
 
-    return (
-        <div className="m-2 text-gray-900 dark:text-gray-100">
-            <form
-                className="flex flex-col gap-4 mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"
-                onSubmit={handleSubmit}
-            >
-                <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">
-                    Add a Code Snippet
-                </h1>
-                <input
-                    type="text"
-                    name="title"
-                    value={form.title}
-                    onChange={handleChange}
-                    placeholder="Title"
-                    className="p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
-                />
-                <input
-                    type="text"
-                    name="description"
-                    value={form.description}
-                    onChange={handleChange}
-                    placeholder="Description"
-                    className="p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
-                />
-                <input
-                    type="text"
-                    name="language"
-                    value={form.language}
-                    onChange={handleChange}
-                    placeholder="Language"
-                    className="p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
-                />
-                <textarea
-                    name="snippet"
-                    value={form.snippet}
-                    onChange={handleChange}
-                    placeholder="Snippet"
-                    className="p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
-                ></textarea>
-                <textarea
-                    name = "tags"
-                    value={form.tags}
-                    onChange={handleChange}
-                    placeholder="Tags (comma-separated)"
-                    className="p-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
-                ></textarea>
-                <button
-                    type="submit"
-                    className="bg-green-500 hover:bg-green-600 text-black w-fit p-2 rounded-md font-semibold font-mono"
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addSnippet({ ...form, id: Math.random().toString(36).substring(2, 15) });
+    setForm(initialForm);
+    setOpen(false);
+  };
+
+return (
+    <>
+        <Button
+            onClick={handleOpen}
+            className="flex items-center gap-2 p-2 m-3 bg-amber-300 text-lg text-black"
+        >
+            <Plus />
+            Add Snippet
+        </Button>
+        <Dialog
+            size="md"
+            open={open}
+            handler={handleOpen}
+            className="p-4 w-1/2 m-auto bg-gray-300"
+        >
+            <DialogHeader className="relative m-0 block">
+                <Typography variant="h4" color="blue-gray">
+                    Add Code Snippet
+                </Typography>
+                <Typography className="mt-1 font-normal text-gray-600">
+                    Store your useful code snippets with tags and language support.
+                </Typography>
+                <IconButton
+                    size="sm"
+                    variant="text"
+                    className="!absolute right-3.5 top-3.5"
+                    onClick={handleOpen}
                 >
-                    Add Snippet
-                </button>
+                    <X strokeWidth={3} />
+                </IconButton>
+            </DialogHeader>
+
+            <form onSubmit={handleSubmit}>
+                <DialogBody className="space-y-2 pb-3 font-mono">
+                    <div className="flex flex-col">
+                        <label className="mb-1 text-sm font-medium text-gray-700">
+                            Title
+                        </label>
+                        <Input
+                            name="title"
+                            value={form.title}
+                            onChange={handleChange}
+                            placeholder="Snippet title"
+                            required
+                            className="p-3 rounded-lg"
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="mb-1 text-sm font-medium text-gray-700">
+                            Language
+                        </label>
+                        <Input
+                            name="language"
+                            value={form.language}
+                            onChange={handleChange}
+                            placeholder="eg. JavaScript"
+                            className="p-3 rounded-lg"
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="mb-1 text-sm font-medium text-gray-700">
+                            Tags
+                        </label>
+                        <Input
+                            name="tags"
+                            value={form.tags}
+                            onChange={handleChange}
+                            placeholder="Comma-separated tags"
+                            className="p-3 rounded-lg"
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="mb-1 text-sm font-medium text-gray-700">
+                            Description
+                        </label>
+                        <Textarea
+                            name="description"
+                            value={form.description}
+                            onChange={handleChange}
+                            placeholder="Optional description"
+                            className="p-3 rounded-lg"
+                            rows={2}
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="mb-1 text-sm font-medium text-gray-700">
+                            Snippet
+                        </label>
+                        <Textarea
+                            name="snippet"
+                            value={form.snippet}
+                            onChange={handleChange}
+                            placeholder="Paste your code here..."
+                            className="p-3 rounded-lg"
+                            rows={6}
+                            required
+                        />
+                    </div>
+                </DialogBody>
+
+                <DialogFooter>
+                    <Button type="submit" className="mr-auto bg-green-600 text-white flex text-md gap-2 hover:bg-green-700 shadow-md shadow-black p-3">
+                    <SaveAll strokeWidth={1.25} /> Add Snippet
+                    </Button>
+                </DialogFooter>
             </form>
-        </div>
-    );
+        </Dialog>
+    </>
+);
 };
 
 export default SnippetForm;

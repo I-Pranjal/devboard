@@ -20,5 +20,10 @@ app.use('/api/tasks', taskRoutes)
 const snippetRoutes = require('./Routes/SnippetRoutes')
 app.use('/api/snippets', snippetRoutes)
 
+// Project routes
+const projectRoutes = require('./Routes/ProjectRoutes') 
+app.use('/api/projects', projectRoutes)
+
+
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))

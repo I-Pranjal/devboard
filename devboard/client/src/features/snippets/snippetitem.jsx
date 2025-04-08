@@ -1,64 +1,74 @@
 import { useState } from 'react'
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+  Chip,
+} from "@material-tailwind/react"
 
-const SnippetItem = ({ snippet, setSnippets, deleteSnippet }) => {
+const SnippetItem = ({ snippet, deleteSnippet }) => {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(snippet.snippet)
-    setCopied(true) 
+    setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   return (
-    <div className="bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg shadow dark:text-white">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-xl font-semibold">{snippet.title}</h3>
-        <div className='flex gap-3'>
-        <span className="text-sm bg-blue-200 text-blue-800 dark:bg-blue-900 dark:text-blue-300 px-2 py-1 rounded">
-          {snippet.language}
-        </span>
-        <button
-          onClick={handleCopy}
-          className="bg-amber-600 text-white px-3 py-1 rounded hover:bg-amber-700"
-          >
-          {copied ? '✅ Copied!' : '📋 Copy'}
-        </button>
-            </div>
-      </div>
+    <Card className="w-full bg-zinc-300 dark:bg-zinc-800 text-zinc-800 dark:text-white shadow-md">
+      <CardBody className="space-y-3">
+        <div className="flex justify-between items-start">
+          <Typography variant="h5" color="blue-gray">
+            {snippet.title}
+          </Typography>
 
-      {snippet.description && (
-        <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
-          {snippet.description}
-        </p>
-      )}
-
-      <pre className="bg-zinc-200 dark:bg-zinc-900 p-3 rounded text-sm overflow-auto font-mono">
-        <code className="whitespace-pre-wrap">{snippet.snippet}</code>
-      </pre>
-
-      <div className="flex justify-between m-4">
-        
-        <button
-          onClick={() => deleteSnippet(snippet._id)}
-          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-500 shadow-sm shadow-black"
-        >
-         Delete Snippet
-        </button>
-
-        <div>
-          <p>
-            {snippet.tags.map((tag, index) => (
-              <span
-                key={index}
-                className="bg-green-200 text-green-800 dark:bg-green-900 dark:text-green-300 px-2 py-1 rounded mr-2 text-sm"
-              >
-                {tag}
-              </span>
-            ))}
-          </p>
+          <Chip
+            value={snippet.language}
+            color="blue"
+            variant="filled"
+            className="text-xs py-2"
+          />
         </div>
-      </div>
-    </div>
+
+        {snippet.description && (
+          <Typography className="text-sm text-zinc-600 dark:text-zinc-300">
+            {snippet.description}
+          </Typography>
+        )}
+
+        <pre className="bg-zinc-200 dark:bg-zinc-900 p-3 rounded text-sm  font-mono h-64 truncate">
+          <code className="whitespace-pre-wrap">{snippet.snippet}</code>
+        </pre>
+
+        <div className="flex flex-wrap gap-2">
+          {snippet.tags.map((tag, index) => (
+            <Chip
+              key={index}
+              value={tag}
+              variant="filled"
+              className="text-xs bg-green-700 p-2"
+            />
+          ))}
+        </div>
+      </CardBody>
+
+      <CardFooter className="pt-4 flex justify-between items-center">
+        <Button onClick={handleCopy} size="sm" className="dark:bg-white dark:text-gray-800 bg-gray-950 text-white">
+          {copied ? '✅ Copied!' : '📋 Copy'}
+        </Button>
+
+        <Button
+          onClick={() => deleteSnippet(snippet._id)}
+          size="sm"
+          color="red"
+        >
+          Delete
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
 

@@ -6,7 +6,7 @@ const SnippetList = ({ snippets, setSnippets , deleteSnippet}) => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 grid gap-4 grid-cols-3 felx">
       {snippets
         .slice()
         .reverse()

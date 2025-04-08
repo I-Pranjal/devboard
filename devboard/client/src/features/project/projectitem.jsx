@@ -2,9 +2,9 @@ const ProjectItem = ({ project, onDelete, onStatusChange }) => {
     return (
         <div className="border border-gray-700 p-4 rounded-lg shadow-sm dark:bg-gray-600 dark:text-white bg-gray-200 text-black">
             <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold">{project.title}</h3>
+                <h3 className="text-lg font-semibold">{project.name}</h3>
                 <button
-                    onClick={() => onDelete(project.id)}
+                    onClick={() => onDelete(project._id)}
                     className="bg-red-500 hover:bg-red-600 text-white rounded-md py-1 px-2 text-sm"
                 >
                     Delete

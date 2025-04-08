@@ -1,89 +1,169 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import {
+  Input,
+  Textarea,
+  Button,
+  Dialog,
+  IconButton,
+  Typography,
+  DialogBody,
+  DialogHeader,
+  DialogFooter,
+  Select,
+  Option,
+} from "@material-tailwind/react";
+import { Plus, X, SaveAll } from "lucide-react";
 
-const initialProject = {
+const ProjectForm = ({ setProjects }) => {
+  const initialForm = {
     title: "",
     description: "",
     repoLink: "",
     deadline: "",
-    status: "planned"
-};
+    status: "planned",
+  };
 
-const ProjectForm = ({ setProjects }) => {
-    const [form, setForm] = useState(initialProject);
+  const [form, setForm] = useState(initialForm);
+  const [open, setOpen] = useState(false);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm({
-            ...form,
-            [name]: value
-        });
-    };
+  const handleOpen = () => setOpen(!open);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!form.title.trim() || !form.description.trim()) {
-            alert("Please fill all fields");
-            return;
-        }
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-        setProjects((prev) => [...prev, form]);
-        setForm(initialProject);
-    };
+  const handleSelectChange = (value) => {
+    setForm({ ...form, status: value });
+  };
 
-    return (
-        <form
-            className="flex flex-col gap-4 p-6 mb-6 border border-gray-300 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm"
-            onSubmit={handleSubmit}
-        >
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Add New Project</h2>
-            <input
-                type="text"
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!form.title.trim() || !form.description.trim()) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    setProjects((prev) => [...prev, form]);
+    setForm(initialForm);
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <Button
+        onClick={handleOpen}
+        className="flex items-center gap-2 p-2 m-3 bg-blue-500 text-lg text-white"
+      >
+        <Plus />
+        Add Project
+      </Button>
+      <Dialog
+        size="md"
+        open={open}
+        handler={handleOpen}
+        className="p-4 w-1/2 m-auto bg-gray-300"
+      >
+        <DialogHeader className="relative m-0 block">
+          <Typography variant="h4" color="blue-gray">
+            Add New Project
+          </Typography>
+          <Typography className="mt-1 font-normal text-gray-600">
+            Plan, manage, and track your development projects.
+          </Typography>
+          <IconButton
+            size="sm"
+            variant="text"
+            className="!absolute right-3.5 top-3.5"
+            onClick={handleOpen}
+          >
+            <X strokeWidth={3} />
+          </IconButton>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit}>
+          <DialogBody className="space-y-2 pb-3 font-mono">
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium text-gray-700">
+                Project Title
+              </label>
+              <Input
                 name="title"
                 value={form.title}
                 onChange={handleChange}
-                placeholder="Project Title"
-                className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-            />
-            <textarea
+                placeholder="Enter project title"
+                className="p-3 rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium text-gray-700">
+                Description
+              </label>
+              <Textarea
                 name="description"
                 value={form.description}
                 onChange={handleChange}
-                placeholder="Project Description"
-                className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-            ></textarea>
-            <input
-                type="text"
+                placeholder="Brief project description"
+                 className="p-3 rounded-lg"
+                rows={3}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium text-gray-700">
+                Repository Link
+              </label>
+              <Input
                 name="repoLink"
                 value={form.repoLink}
                 onChange={handleChange}
-                placeholder="Repository Link"
-                className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-            />
-            <input
+                 className="p-3 rounded-lg"
+                placeholder="e.g. https://github.com/username/project"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium text-gray-700">
+                Deadline
+              </label>
+              <Input
                 type="date"
                 name="deadline"
                 value={form.deadline}
+                 className="p-3 rounded-lg"
                 onChange={handleChange}
-                className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-            />
-            <select
-                name="status"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium text-gray-700">
+                Status
+              </label>
+              <Select
                 value={form.status}
-                onChange={handleChange}
-                className="p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-500 focus:outline-none text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                onChange={handleSelectChange}
+                label="Select Status"
+                 className="p-2 rounded-lg w-auto px-10 flex text-md"
+              >
+                <Option value="planned">Planned</Option>
+                <Option value="in-progress">In Progress</Option>
+                <Option value="completed">Completed</Option>
+              </Select>
+            </div>
+          </DialogBody>
+
+          <DialogFooter>
+            <Button
+              type="submit"
+              className="mr-auto bg-green-600 text-white flex text-md gap-2 hover:bg-green-700 shadow-md shadow-black p-3"
             >
-                <option value="planned">Planned</option>
-                <option value="in-progress">In Progress</option>
-                <option value="completed">Completed</option>
-            </select>
-            <button
-                type="submit"
-                className="bg-blue-600 text-white p-2 w-fit rounded-md hover:bg-blue-700 focus:ring focus:ring-blue-500 focus:outline-none text-sm"
-            >
-                Add Project
-            </button>
+              <SaveAll strokeWidth={1.25} /> Add Project
+            </Button>
+          </DialogFooter>
         </form>
-    );
+      </Dialog>
+    </>
+  );
 };
 
 export default ProjectForm;
